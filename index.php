@@ -14,7 +14,7 @@
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['cpu_usage'])) {
-                    echo $cpu_info;
+                    echo '<strong>Процессор хоста загружен на </strong>' . (new cpu)->cpu_usage() . '%';
                 }
             } ?>
         </li>
@@ -23,7 +23,7 @@
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['ram_info'])) {
-                    echo $ram_info;
+                    echo "<strong>Всего оперативной памяти: </strong>" . (new ram)->ram_info()[0] . " МБ" . "<br>" . "<strong>Доступно оперативной памяти: </strong>" . (new ram)->ram_info()[1] . " МБ";
                 }
             } ?>
         </li>
@@ -32,7 +32,7 @@
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['rom_info'])) {
-                    echo rom_info();
+                    echo (new rom)->rom_info();
                 }
             } ?>
         </li>
@@ -41,7 +41,7 @@
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['os_info'])) {
-                    echo $os_info;
+                    echo (new os)->get_os();
                 }
             } ?>
         </li>
