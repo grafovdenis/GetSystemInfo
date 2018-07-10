@@ -10,43 +10,45 @@
 <form>
     <ul>
         <li>
-            <input type="submit" name="cpu_usage" value="CPU usage"><br>
+            <input type="checkbox" name="cpu_usage"/>CPU usage<br>
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['cpu_usage'])) {
                     echo '<strong>Процессор хоста загружен на </strong>' . (new cpu)->cpu_usage() . '%';
                 }
             } ?>
-        </li>
+        </li><br>
         <li>
-            <input type="submit" name="ram_info" value="RAM info"><br>
+            <input type="checkbox" name="ram_info"/>RAM info<br>
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['ram_info'])) {
                     echo "<strong>Всего оперативной памяти: </strong>" . (new ram)->ram_info()[0] . " МБ" . "<br>" . "<strong>Доступно оперативной памяти: </strong>" . (new ram)->ram_info()[1] . " МБ";
                 }
             } ?>
-        </li>
+        </li><br>
         <li>
-            <input type="submit" name="rom_info" value="ROM info"><br>
+            <input type="checkbox" name="rom_info"/>ROM info<br>
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['rom_info'])) {
                     echo (new rom)->rom_info();
                 }
             } ?>
-        </li>
+        </li><br>
         <li>
-            <input type="submit" name="os_info" value="OS info"/><br>
+            <input type="checkbox" name="os_info"/>OS info<br>
             <?php
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 if (isset($_GET['os_info'])) {
                     echo (new os)->get_os();
                 }
             } ?>
-        </li>
+        </li><br>
+        <li>
+            <input type="submit" value="Отобразить">
+        </li><br>
     </ul>
-
 </form>
 
 </body>
