@@ -17,6 +17,21 @@ li {
     alignment: left;
 }
 
+#os_info, #cpu_usage, #ram_info, #rom_info {
+    list-style-type: none;
+    margin-bottom: 10px;
+    background-color: #74af15;
+    border: none;
+    color: black;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    width: 210px;
+    alignment: left;
+}
+
 a {
     padding: 5px 5px;
     color: darkgrey;

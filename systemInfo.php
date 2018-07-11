@@ -72,6 +72,23 @@ try {
             return "<strong>Хост запущен на: </strong>" . $this->os_family . " " . $this->version;
         }
     }
+
+    $id = $_GET["q"];
+    switch ($id) {
+        case "cpu":
+            echo '<strong>Процессор хоста загружен на </strong>' . (new cpu)->cpu_usage() . '%';
+            break;
+        case "os":
+            echo (new os)->get_os();
+            break;
+        case "ram":
+            echo "<strong>Всего оперативной памяти: </strong>" . (new ram)->ram_info()[0] . " МБ" . "<br>" . "<strong>Доступно оперативной памяти: </strong>" . (new ram)->ram_info()[1] . " МБ";
+            break;
+        case "rom":
+            echo (new rom)->rom_info();
+            break;
+    }
+
 } catch (Exception $e) {
     echo 'Выброшено исключение: ', $e->getMessage(), "\n";
 }
