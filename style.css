@@ -17,7 +17,7 @@ li {
     alignment: left;
 }
 
-#os_info, #cpu_usage, #ram_info, #rom_info {
+#os_info, #cpu_usage, #ram_info, #rom_info, #get_info {
     list-style-type: none;
     margin-bottom: 10px;
     background-color: #74af15;

@@ -1,56 +1,33 @@
-<?php include_once "systemInfo.php" ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Text Exercise</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 
 <body>
-<form>
-    <ul>
-        <li>
-            <input type="checkbox" name="cpu_usage"/>CPU usage<br>
-            <?php
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                if (isset($_GET['cpu_usage'])) {
-                    echo '<strong>Процессор хоста загружен на </strong>' . (new cpu)->cpu_usage() . '%';
-                }
-            } ?>
-        </li><br>
-        <li>
-            <input type="checkbox" name="ram_info"/>RAM info<br>
-            <?php
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                if (isset($_GET['ram_info'])) {
-                    echo "<strong>Всего оперативной памяти: </strong>" . (new ram)->ram_info()[0] . " МБ" . "<br>" . "<strong>Доступно оперативной памяти: </strong>" . (new ram)->ram_info()[1] . " МБ";
-                }
-            } ?>
-        </li><br>
-        <li>
-            <input type="checkbox" name="rom_info"/>ROM info<br>
-            <?php
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                if (isset($_GET['rom_info'])) {
-                    echo (new rom)->rom_info();
-                }
-            } ?>
-        </li><br>
-        <li>
-            <input type="checkbox" name="os_info"/>OS info<br>
-            <?php
-            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                if (isset($_GET['os_info'])) {
-                    echo (new os)->get_os();
-                }
-            } ?>
-        </li><br>
-        <li>
-            <input type="submit" value="Отобразить">
-        </li><br>
-    </ul>
-</form>
+<div id="info">
+<!--TODO обработка json'а-->
+</div>
+<div id="get_info">
+    <button type="button" onclick="getInfo(this.id)" id="full">Get info</button>
+</div>
+<script>
+    //TODO переписать на jquery
+    function getInfo(id) {
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                if (id === "full") {
+                    document.getElementById("info").innerHTML = this.responseText;
+                } else document.getElementById(id).innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("GET", "systemInfo.php?q=" + id, true);
+        xhttp.send(id)
+    }
+</script>
 
 </body>
-
 </html>
