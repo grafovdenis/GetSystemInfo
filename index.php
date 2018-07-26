@@ -27,8 +27,8 @@
                 if (result['result']) {
                     if (id === "full") {
                         console.log(JSON.stringify(result));
-                        $('#info').html('Ваш процессор загружен на ' + result['data']['cpu_usage'] + "%</br>" +
-                            'Ваша OC: ' + result['data']['os_info'] + "</br>" +
+                        $('#info').html('<strong>Ваш процессор загружен на </strong>' + result['data']['cpu_usage'] + "%</br>" +
+                            '<strong>Ваша OC: </strong>' + result['data']['os_info'] + "</br>" +
                             '<strong>Оперативная память: </strong>' + "</br>" +
                             'Всего: ' + Math.round(result['data']['ram_info']['total'] / Math.pow(2, 20)) + " МБ</br>" +
                             'Доступно: ' + Math.round(result['data']['ram_info']['free'] / Math.pow(2, 10)) + " МБ</br>" +
@@ -42,6 +42,5 @@
         })
     });
 </script>
-
 </body>
 </html>

@@ -53,6 +53,13 @@ class get_info
         $version = php_uname("r");
         return $os_family . ' ' . $version;
     }
+
+    static function net_info()
+    {
+        $ps = 'Get-NetAdapterStatistics –Name *';
+        $result = shell_exec($ps);
+        return $result;
+    }
 }
 
 function onError()
@@ -69,6 +76,7 @@ switch ($id) {
         $res['data']['ram_info'] = get_info::ram_info();
         $res['data']['rom_info'] = get_info::rom_info();
         $res['data']['os_info'] = get_info::os_info();
+        $res['data']['net_info'] = get_info::net_info();
         echo json_encode($res);
         break;
 }
