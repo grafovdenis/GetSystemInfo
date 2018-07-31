@@ -39,11 +39,11 @@
                             'Получено: ' + Math.round(result['data']['net_info']['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
                             'Отправленно: ' + Math.round(result['data']['net_info']['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
                             '<strong><i>Одноадрессные пакеты: </i></br></strong>' +
-                            'Получено: ' + result['data']['net_info']['unicast_pockets']['received'] + '</br>' +
-                            'Отправленно: ' + result['data']['net_info']['unicast_pockets']['sent'] + '</br>' +
+                            'Получено: ' + result['data']['net_info']['unicast_packets']['received'] + '</br>' +
+                            'Отправленно: ' + result['data']['net_info']['unicast_packets']['sent'] + '</br>' +
                             '<strong><i>Многоадрессные пакеты: </i></br></strong>' +
-                            'Получено: ' + result['data']['net_info']['non_unicast_pockets']['received'] + '</br>' +
-                            'Отправленно: ' + result['data']['net_info']['non_unicast_pockets']['sent'] + '</br>'
+                            'Получено: ' + result['data']['net_info']['non_unicast_packets']['received'] + '</br>' +
+                            'Отправленно: ' + result['data']['net_info']['non_unicast_packets']['sent'] + '</br>'
                         );
                     } else $('#' + id).innerHTML = JSON.stringify(result);
                 }

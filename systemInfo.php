@@ -60,11 +60,11 @@ class get_info
         exec($runCMD, $result);
         $result = preg_replace('/\s+/', ' ', $result);
         $bytes = explode(" ", iconv("CP866", "UTF-8", $result[4]));
-        $unicast_pockets = explode(" ", iconv("CP866", "UTF-8", $result[5]));
-        $non_unicast_pockets = explode(" ", iconv("CP866", "UTF-8", $result[6]));
+        $unicast_packets = explode(" ", iconv("CP866", "UTF-8", $result[5]));
+        $non_unicast_packets = explode(" ", iconv("CP866", "UTF-8", $result[6]));
         return array('bytes' => array('received' => $bytes[1], 'sent' => $bytes[2]),
-            'unicast_pockets' => array('received' => $unicast_pockets[2], 'sent' => $unicast_pockets[3]),
-            'non_unicast_pockets' => array('received' => $non_unicast_pockets[2], 'sent' => $non_unicast_pockets[3]));
+            'unicast_packets' => array('received' => $unicast_packets[2], 'sent' => $unicast_packets[3]),
+            'non_unicast_packets' => array('received' => $non_unicast_packets[2], 'sent' => $non_unicast_packets[3]));
     }
 }
 
