@@ -34,7 +34,16 @@
                             'Доступно: ' + Math.round(result['data']['ram_info']['free'] / Math.pow(2, 10)) + " МБ</br>" +
                             '<strong>Постоянная память: </strong>' + "</br>" +
                             '<strong>' + result['data']['rom_info']['device'] + '</strong>' + " Всего: " + Math.round(result['data']['rom_info']['size'] / Math.pow(2, 20)) + ' МБ ' +
-                            "Доступно: " + Math.round(result['data']['rom_info']['free_space'] / Math.pow(2, 20)) + ' МБ'
+                            "Доступно: " + Math.round(result['data']['rom_info']['free_space'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            '<strong>Трафик:</strong></br>' +
+                            'Получено: ' + Math.round(result['data']['net_info']['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            'Отправленно: ' + Math.round(result['data']['net_info']['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            '<strong><i>Одноадрессные пакеты: </i></br></strong>' +
+                            'Получено: ' + result['data']['net_info']['unicast_pockets']['received'] + '</br>' +
+                            'Отправленно: ' + result['data']['net_info']['unicast_pockets']['sent'] + '</br>' +
+                            '<strong><i>Многоадрессные пакеты: </i></br></strong>' +
+                            'Получено: ' + result['data']['net_info']['non_unicast_pockets']['received'] + '</br>' +
+                            'Отправленно: ' + result['data']['net_info']['non_unicast_pockets']['sent'] + '</br>'
                         );
                     } else $('#' + id).innerHTML = JSON.stringify(result);
                 }
