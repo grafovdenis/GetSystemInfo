@@ -6,15 +6,28 @@ class get_info
     public $os_family = "";
     public $version = "";
 
+//    static function cpu_usage()
+//    {
+//        $cmd = "wmic cpu get loadpercentage";
+//        exec($cmd, $result);
+//        $res = array();
+//        if ($result != 0) {
+//            $res = $result[1];
+//        } else onError();
+//        return $res;
+//    }
+
     static function cpu_usage()
     {
-        $cmd = "wmic cpu get loadpercentage";
-        exec($cmd, $result);
-        $res = array();
-        if ($result != 0) {
-            $res = $result[1];
-        } else onError();
-        return $res;
+        //почему-то относительные адреса не работают
+        $cores_info = shell_exec('C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -executionpolicy bypass C:\OSPanel\domains\test\cores.ps1 2>&1');
+        $cores_info = explode("</br>", $cores_info);
+        $total = explode(" ", $cores_info[0])[1];
+        $cores = array();
+        for ($i = 0; $i < sizeof($cores_info) - 2; $i++) {
+            $cores[$i] = explode(" ", $cores_info[$i + 1])[1];
+        }
+        return array('total' => $total, 'cores' => (object)$cores);
     }
 
 

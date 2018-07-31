@@ -27,11 +27,11 @@
                 if (result['result']) {
                     if (id === "full") {
                         console.log(JSON.stringify(result));
-                        $('#info').html('<strong>Ваш процессор загружен на </strong>' + result['data']['cpu_usage'] + "%</br>" +
+                        $('#info').html('<strong>Ваш процессор загружен на </strong>' + result['data']['cpu_usage']['total'] + "%</br>" +
                             '<strong>Ваша OC: </strong>' + result['data']['os_info'] + "</br>" +
                             '<strong>Оперативная память: </strong>' + "</br>" +
                             'Всего: ' + Math.round(result['data']['ram_info']['total'] / Math.pow(2, 20)) + " МБ</br>" +
-                            'Доступно: ' + Math.round(result['data']['ram_info']['free'] / Math.pow(2, 10)) + " МБ</br>" +
+                            'Доступно физически: ' + Math.round(result['data']['ram_info']['free'] / Math.pow(2, 10)) + " МБ</br>" +
                             '<strong>Постоянная память: </strong>' + "</br>" +
                             '<strong>' + result['data']['rom_info']['device'] + '</strong>' + " Всего: " + Math.round(result['data']['rom_info']['size'] / Math.pow(2, 20)) + ' МБ ' +
                             "Доступно: " + Math.round(result['data']['rom_info']['free_space'] / Math.pow(2, 20)) + ' МБ</br>' +
