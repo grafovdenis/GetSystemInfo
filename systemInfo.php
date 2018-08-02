@@ -46,15 +46,15 @@ class get_info
     {
         $cmd = "wmic logicaldisk get deviceid, freespace,size";
         exec($cmd, $result);
-        $res = array('device' => "", 'free_space' => "", 'size' => "");
+        $res = array();
         for ($i = 0; $i < sizeof($result); $i++) {
             $result[$i] = preg_replace('/\s+/', ' ', $result[$i]);
         }
         for ($i = 1; $i < sizeof($result) - 1; $i++) {
-            $tmp = explode(" ", $result[1]);
-            $res['device'] = $tmp[0];
-            $res['free_space'] = $tmp[1];
-            $res['size'] = $tmp[2];
+            $tmp = explode(" ", $result[$i]);
+            $res[$i - 1]['device'] = $tmp[0];
+            $res[$i - 1]['free_space'] = $tmp[1];
+            $res[$i - 1]['size'] = $tmp[2];
         }
         return $res;
     }
@@ -67,17 +67,37 @@ class get_info
         return $os_family . ' ' . $version;
     }
 
+//    static function net_info()
+//    {
+//        $runCMD = "netstat -e";
+//        exec($runCMD, $result);
+//        $result = preg_replace('/\s+/', ' ', $result);
+//        $bytes = explode(" ", iconv("CP866", "UTF-8", $result[4]));
+//        $unicast_packets = explode(" ", iconv("CP866", "UTF-8", $result[5]));
+//        $non_unicast_packets = explode(" ", iconv("CP866", "UTF-8", $result[6]));
+//        return array('bytes' => array('received' => $bytes[1], 'sent' => $bytes[2]),
+//            'unicast_packets' => array('received' => $unicast_packets[2], 'sent' => $unicast_packets[3]),
+//            'non_unicast_packets' => array('received' => $non_unicast_packets[2], 'sent' => $non_unicast_packets[3]));
+//    }
+
     static function net_info()
     {
-        $runCMD = "netstat -e";
-        exec($runCMD, $result);
-        $result = preg_replace('/\s+/', ' ', $result);
-        $bytes = explode(" ", iconv("CP866", "UTF-8", $result[4]));
-        $unicast_packets = explode(" ", iconv("CP866", "UTF-8", $result[5]));
-        $non_unicast_packets = explode(" ", iconv("CP866", "UTF-8", $result[6]));
-        return array('bytes' => array('received' => $bytes[1], 'sent' => $bytes[2]),
-            'unicast_packets' => array('received' => $unicast_packets[2], 'sent' => $unicast_packets[3]),
-            'non_unicast_packets' => array('received' => $non_unicast_packets[2], 'sent' => $non_unicast_packets[3]));
+        $stats = shell_exec('C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe Get-NetAdapterStatistics 2>&1');
+        $stats = iconv("CP866", "UTF-8", $stats);
+        $stats = array_slice(explode("\n", $stats), 3, sizeof($stats) - 4);
+        $result = array();
+        $i = 0;
+        foreach ($stats as $el) {
+            preg_match("/\D+/", $el, $tmp);
+            $result[$i]['name'] = trim($tmp[0]);
+            preg_match_all("!\d+!", $el, $nums);
+            $result[$i]['bytes']['received'] = $nums[0][0];
+            $result[$i]['bytes']['sent'] = $nums[0][2];
+            $result[$i]['unicast_packets']['received'] = $nums[0][1];
+            $result[$i]['unicast_packets']['sent'] = $nums[0][3];
+            $i++;
+        }
+        return $result;
     }
 }
 
@@ -90,12 +110,14 @@ function onError()
 $id = $_GET["type"];
 switch ($id) {
     case "full":
+        $time_start = microtime(true);
         $res = array('result' => 'true', 'data' => array());
+        $res['data']['os_info'] = get_info::os_info();
         $res['data']['cpu_usage'] = get_info::cpu_usage();
         $res['data']['ram_info'] = get_info::ram_info();
         $res['data']['rom_info'] = get_info::rom_info();
-        $res['data']['os_info'] = get_info::os_info();
         $res['data']['net_info'] = get_info::net_info();
+        $res['debug']['response_time'] = microtime(true) - $time_start;
         echo json_encode($res);
         break;
 }

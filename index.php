@@ -17,6 +17,7 @@
     <button type="button" id="full">Get info</button>
 </div>
 <script>
+    //TODO отобразить все ядра, все диски, все интерфейсы
     $('#full').click(function () {
         let id = this.id;
         $.ajax({
@@ -33,17 +34,15 @@
                             'Всего: ' + Math.round(result['data']['ram_info']['total'] / Math.pow(2, 20)) + " МБ</br>" +
                             'Доступно физически: ' + Math.round(result['data']['ram_info']['free'] / Math.pow(2, 10)) + " МБ</br>" +
                             '<strong>Постоянная память: </strong>' + "</br>" +
-                            '<strong>' + result['data']['rom_info']['device'] + '</strong>' + " Всего: " + Math.round(result['data']['rom_info']['size'] / Math.pow(2, 20)) + ' МБ ' +
-                            "Доступно: " + Math.round(result['data']['rom_info']['free_space'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            '<strong>' + result['data']['rom_info'][0]['device'] + '</strong>' + " Всего: " + Math.round(result['data']['rom_info'][0]['size'] / Math.pow(2, 20)) + ' МБ ' +
+                            "Доступно: " + Math.round(result['data']['rom_info'][0]['free_space'] / Math.pow(2, 20)) + ' МБ</br>' +
                             '<strong>Трафик:</strong></br>' +
-                            'Получено: ' + Math.round(result['data']['net_info']['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
-                            'Отправленно: ' + Math.round(result['data']['net_info']['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            'Интерфейс: ' + result['data']['net_info'][0]['name'] + "</br>" +
+                            'Получено: ' + Math.round(result['data']['net_info'][0]['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            'Отправленно: ' + Math.round(result['data']['net_info'][0]['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
                             '<strong><i>Одноадрессные пакеты: </i></br></strong>' +
-                            'Получено: ' + result['data']['net_info']['unicast_packets']['received'] + '</br>' +
-                            'Отправленно: ' + result['data']['net_info']['unicast_packets']['sent'] + '</br>' +
-                            '<strong><i>Многоадрессные пакеты: </i></br></strong>' +
-                            'Получено: ' + result['data']['net_info']['non_unicast_packets']['received'] + '</br>' +
-                            'Отправленно: ' + result['data']['net_info']['non_unicast_packets']['sent'] + '</br>'
+                            'Получено: ' + result['data']['net_info'][0]['unicast_packets']['received'] + '</br>' +
+                            'Отправленно: ' + result['data']['net_info'][0]['unicast_packets']['sent'] + '</br>'
                         );
                     } else $('#' + id).innerHTML = JSON.stringify(result);
                 }
