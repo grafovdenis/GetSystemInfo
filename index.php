@@ -10,11 +10,11 @@
 </head>
 
 <body>
-<div id="info">
-
-</div>
+<div id="info"></div>
 <div id="get_info">
     <button type="button" id="full">Get info</button>
+    <!--TODO таймер-->
+    <button type="button" hidden id="update_10sec">Update every 10 seconds</button>
 </div>
 <script>
     //TODO отобразить все ядра, все диски, все интерфейсы
@@ -26,9 +26,17 @@
             type: 'get',
             success: function (result) {
                 if (result['result']) {
-                    if (id === "full") {
+                    if (id === "full" || id === "update") {
+                        // При отображении предполагается, что у Вас 4 ядра, 1 жесткий диск и 2 сетевых интерфейса
+                        // Однако, JSON содержит всю необходимую информацию
                         console.log(JSON.stringify(result));
-                        $('#info').html('<strong>Ваш процессор загружен на </strong>' + result['data']['cpu_usage']['total'] + "%</br>" +
+                        $('#info').html(
+                            '<strong>Ваш процессор загружен на </strong>' + result['data']['cpu_usage']['total'] + "%</br>" +
+                            '<strong>Ядра: </strong>'
+                            + result['data']['cpu_usage']['cores'][0] + '%, '
+                            + result['data']['cpu_usage']['cores'][1] + '%, '
+                            + result['data']['cpu_usage']['cores'][2] + '%, '
+                            + result['data']['cpu_usage']['cores'][3] + '%' + '</br>' +
                             '<strong>Ваша OC: </strong>' + result['data']['os_info'] + "</br>" +
                             '<strong>Оперативная память: </strong>' + "</br>" +
                             'Всего: ' + Math.round(result['data']['ram_info']['total'] / Math.pow(2, 20)) + " МБ</br>" +
@@ -37,15 +45,25 @@
                             '<strong>' + result['data']['rom_info'][0]['device'] + '</strong>' + " Всего: " + Math.round(result['data']['rom_info'][0]['size'] / Math.pow(2, 20)) + ' МБ ' +
                             "Доступно: " + Math.round(result['data']['rom_info'][0]['free_space'] / Math.pow(2, 20)) + ' МБ</br>' +
                             '<strong>Трафик:</strong></br>' +
-                            'Интерфейс: ' + result['data']['net_info'][0]['name'] + "</br>" +
+                            '<strong>Интерфейс: <i>' + result['data']['net_info'][0]['name'] + "</i></strong></br>" +
                             'Получено: ' + Math.round(result['data']['net_info'][0]['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
                             'Отправленно: ' + Math.round(result['data']['net_info'][0]['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
-                            '<strong><i>Одноадрессные пакеты: </i></br></strong>' +
+                            '<i>Одноадрессные пакеты: </i></br>' +
                             'Получено: ' + result['data']['net_info'][0]['unicast_packets']['received'] + '</br>' +
-                            'Отправленно: ' + result['data']['net_info'][0]['unicast_packets']['sent'] + '</br>'
+                            'Отправленно: ' + result['data']['net_info'][0]['unicast_packets']['sent'] + '</br>' +
+                            '<strong>Интерфейс: <i>' + result['data']['net_info'][1]['name'] + "</i></strong></br>" +
+                            'Получено: ' + Math.round(result['data']['net_info'][1]['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            'Отправленно: ' + Math.round(result['data']['net_info'][1]['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            '<i>Одноадрессные пакеты: </i></br>' +
+                            'Получено: ' + result['data']['net_info'][1]['unicast_packets']['received'] + '</br>' +
+                            'Отправленно: ' + result['data']['net_info'][1]['unicast_packets']['sent'] + '</br>'
                         );
-                    } else $('#' + id).innerHTML = JSON.stringify(result);
-                }
+                        if (id !== "update") {
+                            $('#' + id).html('Update');
+                            $('#' + id).attr('id', "update");
+                        }
+                    }
+                } else console.log(result['error']);
             }
         })
     });

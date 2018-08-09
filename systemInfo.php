@@ -6,23 +6,15 @@ class get_info
     public $os_family = "";
     public $version = "";
 
-//    static function cpu_usage()
-//    {
-//        $cmd = "wmic cpu get loadpercentage";
-//        exec($cmd, $result);
-//        $res = array();
-//        if ($result != 0) {
-//            $res = $result[1];
-//        } else onError();
-//        return $res;
-//    }
-
     static function cpu_usage()
     {
         //почему-то относительные адреса не работают
         $cores_info = shell_exec('C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -executionpolicy bypass C:\OSPanel\domains\test\cores.ps1 2>&1');
         $cores_info = explode("</br>", $cores_info);
         $total = explode(" ", $cores_info[0])[1];
+        if ($total == 0) {
+            onError('Zero CPU usage');
+        }
         $cores = array();
         for ($i = 0; $i < sizeof($cores_info) - 2; $i++) {
             $cores[$i] = explode(" ", $cores_info[$i + 1])[1];
@@ -67,19 +59,6 @@ class get_info
         return $os_family . ' ' . $version;
     }
 
-//    static function net_info()
-//    {
-//        $runCMD = "netstat -e";
-//        exec($runCMD, $result);
-//        $result = preg_replace('/\s+/', ' ', $result);
-//        $bytes = explode(" ", iconv("CP866", "UTF-8", $result[4]));
-//        $unicast_packets = explode(" ", iconv("CP866", "UTF-8", $result[5]));
-//        $non_unicast_packets = explode(" ", iconv("CP866", "UTF-8", $result[6]));
-//        return array('bytes' => array('received' => $bytes[1], 'sent' => $bytes[2]),
-//            'unicast_packets' => array('received' => $unicast_packets[2], 'sent' => $unicast_packets[3]),
-//            'non_unicast_packets' => array('received' => $non_unicast_packets[2], 'sent' => $non_unicast_packets[3]));
-//    }
-
     static function net_info()
     {
         $stats = shell_exec('C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe Get-NetAdapterStatistics 2>&1');
@@ -101,9 +80,10 @@ class get_info
     }
 }
 
-function onError()
+function onError($msg)
 {
-    exit("Something went wrong");
+    echo json_encode(array('result' => false, 'error' => "error: " . ($msg != "") ? $msg : 'Something went wrong'));
+    exit();
 }
 
 
@@ -111,7 +91,18 @@ $id = $_GET["type"];
 switch ($id) {
     case "full":
         $time_start = microtime(true);
-        $res = array('result' => 'true', 'data' => array());
+        $res = array('result' => true, 'data' => array());
+        $res['data']['os_info'] = get_info::os_info();
+        $res['data']['cpu_usage'] = get_info::cpu_usage();
+        $res['data']['ram_info'] = get_info::ram_info();
+        $res['data']['rom_info'] = get_info::rom_info();
+        $res['data']['net_info'] = get_info::net_info();
+        $res['debug']['response_time'] = microtime(true) - $time_start;
+        echo json_encode($res);
+        break;
+    case "update":
+        $time_start = microtime(true);
+        $res = array('result' => true, 'data' => array());
         $res['data']['os_info'] = get_info::os_info();
         $res['data']['cpu_usage'] = get_info::cpu_usage();
         $res['data']['ram_info'] = get_info::ram_info();
