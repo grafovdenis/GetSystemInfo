@@ -16,10 +16,13 @@
     <!--TODO таймер-->
     <button type="button" hidden id="update_10sec">Update every 10 seconds</button>
 </div>
-<script>
+<script type="text/javascript">
     //TODO отобразить все ядра, все диски, все интерфейсы
     $('#full').click(function () {
         let id = this.id;
+        get_data(id);
+    });
+    function get_data(id) {
         $.ajax({
             url: 'systemInfo.php',
             data: {"type": id},
@@ -29,7 +32,7 @@
                     if (id === "full" || id === "update") {
                         // При отображении предполагается, что у Вас 4 ядра, 1 жесткий диск и 2 сетевых интерфейса
                         // Однако, JSON содержит всю необходимую информацию
-                        console.log(JSON.stringify(result));
+                        console.log(result);
                         $('#info').html(
                             '<strong>Ваш процессор загружен на </strong>' + result['data']['cpu_usage']['total'] + "%</br>" +
                             '<strong>Ядра: </strong>'
@@ -51,22 +54,24 @@
                             '<i>Одноадрессные пакеты: </i></br>' +
                             'Получено: ' + result['data']['net_info'][0]['unicast_packets']['received'] + '</br>' +
                             'Отправленно: ' + result['data']['net_info'][0]['unicast_packets']['sent'] + '</br>' +
-                            '<strong>Интерфейс: <i>' + result['data']['net_info'][1]['name'] + "</i></strong></br>" +
-                            'Получено: ' + Math.round(result['data']['net_info'][1]['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
-                            'Отправленно: ' + Math.round(result['data']['net_info'][1]['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            '<strong>Интерфейс: <i>' + result['data']['net_info'][0]['name'] + "</i></strong></br>" +
+                            'Получено: ' + Math.round(result['data']['net_info'][0]['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
+                            'Отправленно: ' + Math.round(result['data']['net_info'][0]['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
                             '<i>Одноадрессные пакеты: </i></br>' +
-                            'Получено: ' + result['data']['net_info'][1]['unicast_packets']['received'] + '</br>' +
-                            'Отправленно: ' + result['data']['net_info'][1]['unicast_packets']['sent'] + '</br>'
+                            'Получено: ' + result['data']['net_info'][0]['unicast_packets']['received'] + '</br>' +
+                            'Отправленно: ' + result['data']['net_info'][0]['unicast_packets']['sent'] + '</br>'
                         );
                         if (id !== "update") {
-                            $('#' + id).html('Update');
-                            $('#' + id).attr('id', "update");
+                            setInterval(function () {
+                                get_data("update");
+                            }, 10000);
+                            $('#' + id).html('Update').attr('id', "update");
                         }
                     }
                 } else console.log(result['error']);
             }
         })
-    });
+    }
 </script>
 </body>
 </html>
