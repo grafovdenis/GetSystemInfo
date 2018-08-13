@@ -19,7 +19,7 @@ class get_info
         for ($i = 0; $i < sizeof($cores_info) - 2; $i++) {
             $cores[$i] = explode(" ", $cores_info[$i + 1])[1];
         }
-        return array('total' => $total, 'cores' => (object)$cores);
+        return array('total' => $total, 'cores' => $cores);
     }
 
 

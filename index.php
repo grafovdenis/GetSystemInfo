@@ -13,15 +13,13 @@
 <div id="info"></div>
 <div id="get_info">
     <button type="button" id="full">Get info</button>
-    <!--TODO таймер-->
-    <button type="button" hidden id="update_10sec">Update every 10 seconds</button>
 </div>
 <script type="text/javascript">
-    //TODO отобразить все ядра, все диски, все интерфейсы
     $('#full').click(function () {
         let id = this.id;
         get_data(id);
     });
+
     function get_data(id) {
         $.ajax({
             url: 'systemInfo.php',
@@ -30,36 +28,33 @@
             success: function (result) {
                 if (result['result']) {
                     if (id === "full" || id === "update") {
-                        // При отображении предполагается, что у Вас 4 ядра, 1 жесткий диск и 2 сетевых интерфейса
-                        // Однако, JSON содержит всю необходимую информацию
-                        console.log(result);
+                        let cores = result['data']['cpu_usage']['cores'].join("%, ") + "%";
+                        let rom_info = result['data']['rom_info'];
+                        let rom = '';
+                        for (let el of rom_info) {
+                            rom += '<strong>' + el['device'] + '</strong>' +
+                                ' Всего: ' + Math.round(el['size'] / Math.pow(2, 20)) + ' МБ ' +
+                                'Доступно: ' + Math.round(el['free_space'] / Math.pow(2, 20)) + ' МБ</br>'
+                        }
+                        let net_info = result['data']['net_info'];
+                        let interfaces = '';
+                        for (let el of net_info) {
+                            interfaces += '<strong>Интерфейс: <i>' + el['name'] + "</i></strong></br>" +
+                                'Получено: ' + Math.round(el['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
+                                'Отправленно: ' + Math.round(el['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
+                                '<i>Одноадрессные пакеты: </i></br>' +
+                                'Получено: ' + el['unicast_packets']['received'] + '</br>' +
+                                'Отправленно: ' + el['unicast_packets']['sent'] + '</br>';
+                        }
                         $('#info').html(
                             '<strong>Ваш процессор загружен на </strong>' + result['data']['cpu_usage']['total'] + "%</br>" +
-                            '<strong>Ядра: </strong>'
-                            + result['data']['cpu_usage']['cores'][0] + '%, '
-                            + result['data']['cpu_usage']['cores'][1] + '%, '
-                            + result['data']['cpu_usage']['cores'][2] + '%, '
-                            + result['data']['cpu_usage']['cores'][3] + '%' + '</br>' +
+                            '<strong>Ядра: </strong>' + cores + '</br>' +
                             '<strong>Ваша OC: </strong>' + result['data']['os_info'] + "</br>" +
                             '<strong>Оперативная память: </strong>' + "</br>" +
                             'Всего: ' + Math.round(result['data']['ram_info']['total'] / Math.pow(2, 20)) + " МБ</br>" +
                             'Доступно физически: ' + Math.round(result['data']['ram_info']['free'] / Math.pow(2, 10)) + " МБ</br>" +
-                            '<strong>Постоянная память: </strong>' + "</br>" +
-                            '<strong>' + result['data']['rom_info'][0]['device'] + '</strong>' + " Всего: " + Math.round(result['data']['rom_info'][0]['size'] / Math.pow(2, 20)) + ' МБ ' +
-                            "Доступно: " + Math.round(result['data']['rom_info'][0]['free_space'] / Math.pow(2, 20)) + ' МБ</br>' +
-                            '<strong>Трафик:</strong></br>' +
-                            '<strong>Интерфейс: <i>' + result['data']['net_info'][0]['name'] + "</i></strong></br>" +
-                            'Получено: ' + Math.round(result['data']['net_info'][0]['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
-                            'Отправленно: ' + Math.round(result['data']['net_info'][0]['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
-                            '<i>Одноадрессные пакеты: </i></br>' +
-                            'Получено: ' + result['data']['net_info'][0]['unicast_packets']['received'] + '</br>' +
-                            'Отправленно: ' + result['data']['net_info'][0]['unicast_packets']['sent'] + '</br>' +
-                            '<strong>Интерфейс: <i>' + result['data']['net_info'][0]['name'] + "</i></strong></br>" +
-                            'Получено: ' + Math.round(result['data']['net_info'][0]['bytes']['received'] / Math.pow(2, 20)) + ' МБ</br>' +
-                            'Отправленно: ' + Math.round(result['data']['net_info'][0]['bytes']['sent'] / Math.pow(2, 20)) + ' МБ</br>' +
-                            '<i>Одноадрессные пакеты: </i></br>' +
-                            'Получено: ' + result['data']['net_info'][0]['unicast_packets']['received'] + '</br>' +
-                            'Отправленно: ' + result['data']['net_info'][0]['unicast_packets']['sent'] + '</br>'
+                            '<strong>Постоянная память: </strong>' + "</br>" + rom +
+                            '<strong>Трафик:</strong></br>' + interfaces
                         );
                         if (id !== "update") {
                             setInterval(function () {
